@@ -141,3 +141,12 @@ void displayBoard(const vector <vector<int> > &board) {
 	}
 	cout << endl;
 }
+
+
+bool isFull(const vector<vector<int> > board, int dropLocation) {
+	if (board.at(dropLocation).at(6) > 0)
+		return true;
+	else
+		return false;
+}
+
