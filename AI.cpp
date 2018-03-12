@@ -12,6 +12,10 @@ using namespace std;
 bool userCanWin(const vector<vector<int> > &board, int turn) {
 
 	for (int k = 0; k < 7; k++) {
+
+		if (isFull(board,k))
+			continue;
+
 		vector<vector<int> > tempBoard = board;
 		int winner = dropPiece(tempBoard, k, turn);
 		
@@ -27,22 +31,41 @@ bool userCanWin(const vector<vector<int> > &board, int turn) {
 // 2 indicates good move. 1 indicates bad move. 0 indicates acceptable move
 bool isGoodMove(vector<vector<int> >board, int turn, const int &length) {
 	
+	//cout << "entered isGoodMove alright" << endl;
+
 	// base cases. if other player can immediatly end game, return 0;
 	// if length is too big stop searching
-	if ((userCanWin(board, turn)) || (length >= 3)) {
-		return true;
+	if ((userCanWin(board, turn))) {
+		//cout << "base case reached " << endl;
+		//system("pause");
+		return false;
 	}
 
+	if (length >= 4 && turn == 2)
+		return false;
+	else if (length >= 4 && turn == 1)
+		return true;
+
+
+	int new_turn = changeTurn(turn);
 	int userEscapeOptions = 7;
 	for (int j = 0; j < 7; j++) {
 
+		//cout << "j = " << j << endl;
+		//int can_i_win = 0;
 		vector<vector<int> > tempBoard = board;
-		dropPiece(tempBoard, j, 2); // all possibilities for user
-		
+		if (isFull(tempBoard, j))
+			continue;
+		else
+			dropPiece(tempBoard, j, new_turn); // all possibilities for user
+
 		int new_length = length + 1;
-		turn = changeTurn(turn);
-		if (isGoodMove(tempBoard, turn, new_length)) {
+		
+		//cout << "about to recur" << endl;
+		if (isGoodMove(tempBoard, new_turn, new_length)) {
 			userEscapeOptions--;
+			//cout << "userEscapeOptions: " << userEscapeOptions << " on level " << length << endl;
+
 		}
 	}
 
@@ -56,22 +79,32 @@ bool isGoodMove(vector<vector<int> >board, int turn, const int &length) {
 
 int nextMove(const vector<vector<int> > &board) {
 	
+
 	// looking for good moves to do
 	for (int k = 0; k < 7; k++) {
+		cout << k << endl;
+
 
 		if (isFull(board, k))
 			continue;
+
 
 		vector<vector<int> > tempBoard = board;
 
 		// can_i_win_now will hold 2 if he can win
 		int can_i_win_now = dropPiece(tempBoard, k, 2);
-		if (isGoodMove(tempBoard, 1, 0)) {
+		if (can_i_win_now > 0)
 			return k;
-		}// of if
-	}// of for
 
-	cout << "didn't find good move" << endl;
+
+		if (isGoodMove(tempBoard, 1, 0)) {	
+			//cout << k << " is a good move" << endl;
+			return k;
+		}
+
+	}
+
+	//cout << "didn't find good move" << endl;
 	
 	for (int k = 0; k < 7; k++) {
 		if (!isFull(board, k))

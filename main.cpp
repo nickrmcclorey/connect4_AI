@@ -16,15 +16,21 @@ vector<vector<int> > interestingSituation() {
 
 	int dropLocations[24] = { 0, 0, 3, 0, 0, 1, 1, 1, 1, 2, 0, 2, 0,  5, 2, 5, 2, 4, 4, 4, 2, 6, 6 };
 	
-
+	/*
 	for (int k = 0; k < 21; k++) {
 		int nothig = dropPiece(board, dropLocations[k], turn);
 		turn = changeTurn(turn);
 	}
 	dropPiece(board, 6, 2);
 	dropPiece(board, 3, 2);
-	dropPiece(board, 3, 1);	
-
+	dropPiece(board, 3, 1);
+	board.at(2).at(3) = 0;
+	board.at(2).at(4) = 0;
+	*/
+	dropPiece(board, 0, 1);
+	dropPiece(board, 1, 1);
+	dropPiece(board, 6, 1);
+	dropPiece(board, 5, 1);
 
 	//displayBoard(board);
 	
@@ -59,8 +65,9 @@ int main() {
 
 	int turn = 1;
 	vector <vector <int> > gameboard(7, vector<int>(7, 0));
-	gameboard = interestingSituation();
-	
+	//gameboard = interestingSituation(); // creates interesting situationn
+	dropPiece(gameboard, 0, 1);
+
 	testingGround(gameboard);
 
 

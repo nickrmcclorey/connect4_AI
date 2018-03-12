@@ -123,7 +123,7 @@ int dropPiece(vector <vector <int> > &board, const int &dropLocation, const int 
 
 void displayBoard(const vector <vector<int> > &board) {
 
-	system("cls");
+	//system("cls");
 	cout << endl << endl << endl;
 
 	// provide column numbers
