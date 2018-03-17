@@ -4,9 +4,36 @@
 #include <vector>
 #include <cstdio>
 #include <fstream>
+#include <sstream>
 #include "connect4.h"
 
 using namespace std;
+
+class fileHandler {
+public:
+	ofstream black;
+
+	void openBlacklist() {
+		black.open("blacklist.txt");
+		if (black.fail())
+			exit(0);
+	}
+
+	void blacklist(vector<int> moves) {
+		ostringstream translator;
+		for (int k = 0; k < moves.size(); k++) {
+			translator << moves.at(k);
+		}
+		black << translator.str() << endl;
+			
+	}
+
+	void close() {
+		black.close();
+	}
+
+};
+
 
 
 bool userCanWin(const vector<vector<int> > &board, int turn) {
@@ -28,6 +55,8 @@ bool userCanWin(const vector<vector<int> > &board, int turn) {
 }
 
 
+
+
 // 2 indicates good move. 1 indicates bad move. 0 indicates acceptable move
 bool isGoodMove(vector<vector<int> >board, int turn, const int &length) {
 	
@@ -42,7 +71,7 @@ bool isGoodMove(vector<vector<int> >board, int turn, const int &length) {
 	}
 
 	if (length >= 4 && turn == 2)
-		return false;
+		return true;
 	else if (length >= 4 && turn == 1)
 		return true;
 
@@ -64,13 +93,13 @@ bool isGoodMove(vector<vector<int> >board, int turn, const int &length) {
 		//cout << "about to recur" << endl;
 		if (isGoodMove(tempBoard, new_turn, new_length)) {
 			userEscapeOptions--;
-			//cout << "userEscapeOptions: " << userEscapeOptions << " on level " << length << endl;
+			//cout << "userEscapeOptions: " << userEscapeOptions << " on level " << length << " at spot " << j << endl;
 
 		}
 	}
 
 	if (userEscapeOptions == 0)
-		return true;
+		return false;
 
 }
 
@@ -98,8 +127,10 @@ int nextMove(const vector<vector<int> > &board) {
 
 
 		if (isGoodMove(tempBoard, 1, 0)) {	
-			//cout << k << " is a good move" << endl;
-			return k;
+			cout << k << " is a good move" << endl;
+		}
+		else {
+			cout << k << " is a bad move" << endl;
 		}
 
 	}
