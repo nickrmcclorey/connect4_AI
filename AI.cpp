@@ -52,6 +52,43 @@ public:
 		gold.push_back(moves);
 	}
 
+	void shortenBlacklist() {
+		for (int k = 0; k < black.size(); k++) {
+			if (black.at(k).size() % 2 == 0) {
+				black.at(k).pop_back();
+			}
+		}
+
+
+			for (int k = 0; k < black.size(); k++) {
+				
+					vector<int> baseMoves = black.at(k);
+
+				int escapeOptions = 7;
+				for (int i = 0; i < 7; i++) {
+					
+					baseMoves.pop_back();
+					baseMoves.push_back(i);
+					
+					if (this->contains(baseMoves)) {
+						escapeOptions--;
+					}
+
+				}
+
+				if (escapeOptions == 0) {
+					baseMoves.pop_back();
+					baseMoves.pop_back();
+					this->blacklist(baseMoves);
+				}
+
+				
+			
+			}
+
+		
+	}
+
 };
 
 fileHandler file;
@@ -63,7 +100,7 @@ void runthrough(const vector<vector<int> > &board, vector<int> moves) {
 	
 	int turn = 1;
 
-	if (moves.size() >= 4)
+	if (moves.size() >= 6)
 		return;
 
 	if (moves.size() % 2 == 0)
@@ -107,6 +144,7 @@ void runthrough(const vector<vector<int> > &board, vector<int> moves) {
 void showCombinations(const vector<vector<int> > board) {
 	vector<int> nothing;
 	runthrough(board, nothing);
+	file.shortenBlacklist();
 	file.showBlacklist();
 
 
