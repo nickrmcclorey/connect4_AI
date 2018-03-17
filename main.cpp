@@ -39,7 +39,7 @@ vector<vector<int> > interestingSituation() {
 	return board;
 }
 
-/*
+
 void testingGround(vector<vector<int> > &board) {
 
 	cout << "original" << endl;
@@ -48,7 +48,8 @@ void testingGround(vector<vector<int> > &board) {
 
 
 	while (1) {
-		int AI_move = nextMove(board);
+		int AI_move = showCombinations(board);
+		system("pause");
 		dropPiece(board, AI_move, 2);
 		displayBoard(board);
 		cout << "AI dropped in spot: " << AI_move << endl;
@@ -61,7 +62,7 @@ void testingGround(vector<vector<int> > &board) {
 	exit(0);
 
 }
-*/
+
 
 int main() {
 
@@ -74,8 +75,8 @@ int main() {
 	//dropPiece(gameboard, 0, 1);
 
 
-	showCombinations(gameboard);
 	displayBoard(gameboard);
+	testingGround(gameboard);
 	return 0;
 	
 	/*
