@@ -27,17 +27,19 @@ vector<vector<int> > interestingSituation() {
 	board.at(2).at(3) = 0;
 	board.at(2).at(4) = 0;
 	*/
+	
 	dropPiece(board, 0, 1);
 	dropPiece(board, 1, 1);
 	dropPiece(board, 6, 1);
 	dropPiece(board, 5, 1);
+	
 
 	//displayBoard(board);
 	
 	return board;
 }
 
-
+/*
 void testingGround(vector<vector<int> > &board) {
 
 	cout << "original" << endl;
@@ -59,15 +61,24 @@ void testingGround(vector<vector<int> > &board) {
 	exit(0);
 
 }
-
+*/
 
 int main() {
 
+
+
+
 	int turn = 1;
 	vector <vector <int> > gameboard(7, vector<int>(7, 0));
-	//gameboard = interestingSituation(); // creates interesting situationn
-	dropPiece(gameboard, 0, 1);
+	gameboard = interestingSituation(); // creates interesting situationn
+	//dropPiece(gameboard, 0, 1);
 
+
+	showCombinations(gameboard);
+	displayBoard(gameboard);
+	return 0;
+	
+	/*
 	testingGround(gameboard);
 
 
@@ -98,5 +109,6 @@ int main() {
 	
 	system("pause");
 	return 0;
+	*/
 }
 

@@ -11,29 +11,106 @@ using namespace std;
 
 class fileHandler {
 public:
-	ofstream black;
-
-	void openBlacklist() {
-		black.open("blacklist.txt");
-		if (black.fail())
-			exit(0);
-	}
+	vector<vector<int> > black;
+	vector<vector<int> > gold;
+	
 
 	void blacklist(vector<int> moves) {
-		ostringstream translator;
-		for (int k = 0; k < moves.size(); k++) {
-			translator << moves.at(k);
-		}
-		black << translator.str() << endl;
-			
+		black.push_back(moves);
 	}
 
-	void close() {
-		black.close();
+	bool contains(vector<int> moves) {
+		for (int k = 0; k < black.size(); k++) {
+			if (black.at(k) == moves)
+				return true;
+		}
+		return false;
+	}
+
+	void blacklistRoot(vector<int> moves) {
+		moves.pop_back();
+		black.push_back(moves);
+	}
+
+	void showBlacklist() {
+		cout << "blacklist" << endl;
+		for (int k = 0; k < black.size(); k++) {
+			for (int i = 0; i < black.at(k).size(); i++) {
+				cout << black.at(k).at(i);
+			}
+			cout << endl;
+		}
+
+	}
+	
+	void goldlist(vector<int> moves) {
+		gold.push_back(moves);
+	}
+
+	void goldlistRoot(vector<int> moves) {
+		moves.pop_back();
+		gold.push_back(moves);
 	}
 
 };
 
+fileHandler file;
+
+
+
+void runthrough(const vector<vector<int> > &board, vector<int> moves) {
+
+	
+	int turn = 1;
+
+	if (moves.size() >= 4)
+		return;
+
+	if (moves.size() % 2 == 0)
+		turn = 2;
+	else
+		turn = 1;
+
+	if (moves.size() == 0) {
+		vector<int> newMoves;
+		moves = newMoves;
+		turn = 2;
+	}
+
+
+	for (int k = 0; k < 7; k++) {
+
+		if (isFull(board, k))
+			continue;
+
+		vector<vector<int> > tempBoard = board;
+		vector<int> tempMoves = moves;
+		tempMoves.push_back(k);
+
+		int winner = dropPiece(tempBoard,k,turn);
+		
+
+		
+		if (winner == 1) {
+			file.blacklist(tempMoves);
+		} else if (winner == 2) {
+			file.goldlist(moves);
+		} else {
+			runthrough(tempBoard, tempMoves);
+		}
+
+
+	}
+
+}
+
+void showCombinations(const vector<vector<int> > board) {
+	vector<int> nothing;
+	runthrough(board, nothing);
+	file.showBlacklist();
+
+
+}
 
 
 bool userCanWin(const vector<vector<int> > &board, int turn) {
@@ -56,9 +133,9 @@ bool userCanWin(const vector<vector<int> > &board, int turn) {
 
 
 
-
+/*
 // 2 indicates good move. 1 indicates bad move. 0 indicates acceptable move
-bool isGoodMove(vector<vector<int> >board, int turn, const int &length) {
+bool isGoodMove(vector<vector<int> >board, int turn, const int &length, vector<int> moves) {
 	
 	//cout << "entered isGoodMove alright" << endl;
 
@@ -125,13 +202,8 @@ int nextMove(const vector<vector<int> > &board) {
 		if (can_i_win_now > 0)
 			return k;
 
-
-		if (isGoodMove(tempBoard, 1, 0)) {	
-			cout << k << " is a good move" << endl;
-		}
-		else {
-			cout << k << " is a bad move" << endl;
-		}
+		isGoodMove(tempBoard, 1, k);
+		
 
 	}
 

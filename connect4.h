@@ -14,9 +14,10 @@ bool isFull(const vector<vector<int> > board, int dropLocation);
 
 // from AI.cpp
 bool userCanWin(const vector<vector<int> > &board, int turn);
-bool isGoodMove(vector<vector<int> >board, int turn, const int &length);
 int nextMove(const vector<vector<int> > &board);
-
+void showCombinations(const vector<vector<int> > board);
+void runthrough(const vector<vector<int> > &board, vector<int> moves);
+bool isGoodMove(vector<vector<int> >board, int turn, const int &length, vector<int> moves);
 
 
 #endif
