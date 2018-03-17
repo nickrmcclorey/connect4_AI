@@ -5,6 +5,7 @@
 #include <cstdio>
 #include <fstream>
 #include <sstream>
+#include <ctime>
 #include "connect4.h"
 
 using namespace std;
@@ -15,7 +16,8 @@ public:
 	vector<vector<int> > gold;
 	
 
-	void blacklist(vector<int> moves) {
+
+	void blacklist(const vector<int> &moves) {
 		black.push_back(moves);
 	}
 
@@ -52,6 +54,17 @@ public:
 		gold.push_back(moves);
 	}
 
+	vector<int> badSingleMoves (){
+		vector<int> badMoves;
+		
+		for (int k = 0; k < black.size(); k++) {
+			if (black.at(k).size() == 1)
+				badMoves.push_back(black.at(k).at(0));
+		}
+
+		return badMoves;
+	}
+
 	void shortenBlacklist() {
 		for (int k = 0; k < black.size(); k++) {
 			if (black.at(k).size() % 2 == 0) {
@@ -60,9 +73,13 @@ public:
 		}
 
 
+
 			for (int k = 0; k < black.size(); k++) {
-				
-					vector<int> baseMoves = black.at(k);
+				if ((k > 0) && (black.at(k) == black.at(k - 1))) {
+					continue;
+				}
+
+				vector<int> baseMoves = black.at(k);
 
 				int escapeOptions = 7;
 				for (int i = 0; i < 7; i++) {
@@ -79,7 +96,9 @@ public:
 				if (escapeOptions == 0) {
 					baseMoves.pop_back();
 					baseMoves.pop_back();
-					this->blacklist(baseMoves);
+					//black.at(k) = baseMoves;
+					if (black.back() != baseMoves)
+						this->blacklist(baseMoves);
 				}
 
 				
@@ -95,12 +114,12 @@ fileHandler file;
 
 
 
-void runthrough(const vector<vector<int> > &board, vector<int> moves) {
+void runthrough(const vector<vector<int> > &board, const vector<int> &moves) {
 
 	
 	int turn = 1;
 
-	if (moves.size() >= 6)
+	if (moves.size() >= 4)
 		return;
 
 	if (moves.size() % 2 == 0)
@@ -108,11 +127,11 @@ void runthrough(const vector<vector<int> > &board, vector<int> moves) {
 	else
 		turn = 1;
 
-	if (moves.size() == 0) {
+	/*if (moves.size() == 0) {
 		vector<int> newMoves;
 		moves = newMoves;
 		turn = 2;
-	}
+	}*/
 
 
 	for (int k = 0; k < 7; k++) {
@@ -124,14 +143,14 @@ void runthrough(const vector<vector<int> > &board, vector<int> moves) {
 		vector<int> tempMoves = moves;
 		tempMoves.push_back(k);
 
-		int winner = dropPiece(tempBoard,k,turn);
-		
 
-		
+		int winner = dropPiece(tempBoard,k,turn);
+
+
 		if (winner == 1) {
 			file.blacklist(tempMoves);
-		} else if (winner == 2) {
-			file.goldlist(moves);
+		//} else if (winner == 2) {
+			//file.goldlist(moves);
 		} else {
 			runthrough(tempBoard, tempMoves);
 		}
@@ -141,12 +160,34 @@ void runthrough(const vector<vector<int> > &board, vector<int> moves) {
 
 }
 
-void showCombinations(const vector<vector<int> > board) {
+bool contains(vector<int> Array, int value) {
+
+	for (int k = 0; k < Array.size(); k++) { // cycles through array
+		if (Array.at(k) == value) { // checks to see if value exists
+			return true;
+		}
+	}
+	return false; // if program gets to this point, no match has been foundd
+}
+
+int showCombinations(const vector<vector<int> > board) {
+	cout << "calculating" << endl;
 	vector<int> nothing;
 	runthrough(board, nothing);
 	file.shortenBlacklist();
 	file.showBlacklist();
 
+	vector<int> goodMoves;
+	vector <int> badMoves = file.badSingleMoves();
+	for (int k = 0; k < 7; k++) {
+		if (!contains(badMoves, k))
+			goodMoves.push_back(k);
+
+	}
+
+	srand(time(0));
+	int goodMoveIndex = rand() % goodMoves.size();
+	return goodMoves.at(goodMoveIndex);
 
 }
 
