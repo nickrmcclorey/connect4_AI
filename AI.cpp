@@ -12,15 +12,18 @@ using namespace std;
 
 class fileHandler {
 public:
+	// holds all the bad moves
 	vector<vector<int> > black;
+	// holds all the good moves. not being used yet
 	vector<vector<int> > gold;
 	
 
-
+	// adds a series of moves to the blacklist
 	void blacklist(const vector<int> &moves) {
 		black.push_back(moves);
 	}
 
+	// checks to see if the blacklist contains this combination
 	bool contains(vector<int> moves) {
 		for (int k = 0; k < black.size(); k++) {
 			if (black.at(k) == moves)
@@ -29,11 +32,13 @@ public:
 		return false;
 	}
 
+	// blacklists the moves leading up to a certain set of moves
 	void blacklistRoot(vector<int> moves) {
 		moves.pop_back();
 		black.push_back(moves);
 	}
 
+	// displays all the bad moves
 	void showBlacklist() {
 		cout << "blacklist" << endl;
 		for (int k = 0; k < black.size(); k++) {
@@ -45,6 +50,7 @@ public:
 
 	}
 	
+	// adds a combination to the goldlist
 	void goldlist(vector<int> moves) {
 		gold.push_back(moves);
 	}
@@ -54,6 +60,8 @@ public:
 		gold.push_back(moves);
 	}
 
+	// looks through the blacklist and find the single moves that are bad
+	// so we know what move we shoudl do know
 	vector<int> badSingleMoves (){
 		vector<int> badMoves;
 		
@@ -65,6 +73,12 @@ public:
 		return badMoves;
 	}
 
+
+	/*
+	Extremely important function. This function looks through the blacklist and figures out what moves
+	can trap you in a bad situation. If There's no way out of a situation, it blacklists the decision before that
+	so the AI doesn't get into that bad situation. It eventually narrrows down the bad moves to a single move
+	*/
 	void shortenBlacklist() {
 		for (int k = 0; k < black.size(); k++) {
 			if (black.at(k).size() % 2 == 0) {
@@ -114,14 +128,22 @@ fileHandler file;
 
 
 
+/*
+Important function. It is a recursive function that looks through all the possible combination of moves for the 
+next couple moves. How far it looks ahead is determined by the number in the first if statement. It isn't 
+possible to look for all combinations due to processing limitations. Increase this number to increase
+how far the AI looks ahead and increase execution time. Shorten it to quicken execution time. Always have it as even
+as its looking for losing combbinations and even moves are player moves
+*/
 void runthrough(const vector<vector<int> > &board, const vector<int> &moves) {
 
-	
-	int turn = 1;
-
-	if (moves.size() >= 4)
+	if (moves.size() >= 4) // keeps execution time low
 		return;
 
+
+	int turn = 1;
+	// figuring out what turn it is
+	// even turns are player turns. odd turns are done by AI
 	if (moves.size() % 2 == 0)
 		turn = 2;
 	else
@@ -136,14 +158,16 @@ void runthrough(const vector<vector<int> > &board, const vector<int> &moves) {
 
 	for (int k = 0; k < 7; k++) {
 
+		// checks to see if board is full in which case, a piece can't be dropped there
 		if (isFull(board, k))
 			continue;
 
+		// temporary board is set to original board and then changed to look at all combinations
 		vector<vector<int> > tempBoard = board;
 		vector<int> tempMoves = moves;
 		tempMoves.push_back(k);
 
-
+		// returns 2 if AI won and returns 1 if player won. Returns 0 if no one won
 		int winner = dropPiece(tempBoard,k,turn);
 
 
@@ -152,7 +176,7 @@ void runthrough(const vector<vector<int> > &board, const vector<int> &moves) {
 		//} else if (winner == 2) {
 			//file.goldlist(moves);
 		} else {
-			runthrough(tempBoard, tempMoves);
+			runthrough(tempBoard, tempMoves);// runs this function again
 		}
 
 
