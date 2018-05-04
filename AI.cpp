@@ -12,6 +12,8 @@ using namespace std;
 
 class fileHandler {
 public:
+	void runthrough(const vector<vector<int> > &board, const vector<int> &moves);
+
 	// holds all the bad moves
 	vector<vector<int> > black;
 	// holds all the good moves. not being used yet
@@ -98,9 +100,10 @@ public:
 				int escapeOptions = 7;
 				for (int i = 0; i < 7; i++) {
 					
-					baseMoves.pop_back();
-					baseMoves.push_back(i);
-					
+					//baseMoves.pop_back();
+					//baseMoves.push_back(i);
+					baseMoves.back() = i;
+
 					if (this->contains(baseMoves)) {
 						escapeOptions--;
 					}
@@ -124,7 +127,7 @@ public:
 
 };
 
-fileHandler file;
+//fileHandler file;
 
 
 
@@ -135,7 +138,7 @@ possible to look for all combinations due to processing limitations. Increase th
 how far the AI looks ahead and increase execution time. Shorten it to quicken execution time. Always have it as even
 as its looking for losing combbinations and even moves are player moves
 */
-void runthrough(const vector<vector<int> > &board, const vector<int> &moves) {
+void fileHandler::runthrough(const vector<vector<int> > &board, const vector<int> &moves) {
 
 	if (moves.size() >= 4) // keeps execution time low
 		return;
@@ -172,7 +175,7 @@ void runthrough(const vector<vector<int> > &board, const vector<int> &moves) {
 
 
 		if (winner == 1) {
-			file.blacklist(tempMoves);
+			this->blacklist(tempMoves);
 		//} else if (winner == 2) {
 			//file.goldlist(moves);
 		} else {
@@ -197,12 +200,16 @@ bool contains(vector<int> Array, int value) {
 int showCombinations(const vector<vector<int> > board) {
 	cout << "calculating" << endl;
 	vector<int> nothing;
-	runthrough(board, nothing);
-	file.shortenBlacklist();
-	file.showBlacklist();
+	fileHandler AI_man;
+	AI_man.runthrough(board, nothing);
+	//file.shortenBlacklist();
+	//file.showBlacklist();
+	AI_man.shortenBlacklist();
+	AI_man.showBlacklist();
+
 
 	vector<int> goodMoves;
-	vector <int> badMoves = file.badSingleMoves();
+	vector <int> badMoves = AI_man.badSingleMoves();
 	for (int k = 0; k < 7; k++) {
 		if (!contains(badMoves, k))
 			goodMoves.push_back(k);
