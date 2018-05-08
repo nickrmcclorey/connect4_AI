@@ -62,7 +62,7 @@ void connect4Board::setAt(int x, int y, int team) {
 		exit(0);
 	}
 
-	board[x][y] == team;
+	board[x][y] = team;
 
 }
 
@@ -159,15 +159,17 @@ int connect4Board::checkWin() {
 
 void connect4Board::dropPiece(int dropLocation) {
 	
-	int k = 0;
-	for (; k < 7; k++) {
-		if (this->at(dropLocation, k) == 0) {
-			this->setAt(dropLocation, k, turn);
+	
+	for (int k = 6; k >= 0; k--) {
+		if (this->at(dropLocation, k) != empty) {
+			this->setAt(dropLocation, k+1, turn);
 			return;
 		}
-	
 	}
 	
+	this->setAt(dropLocation, 0, turn);
+	return;
+
 }
 
 void connect4Board::displayBoard() {

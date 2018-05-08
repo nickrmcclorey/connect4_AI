@@ -26,14 +26,16 @@ private:
 	int board[7][7];
 	int turn;
 	bool gameIsOver;
+	int winner;
 	int lastX; // x position of last piece dropped
 	int lastY; // y position of last piece dropped
 
 
 public:
+	// the three possible pieces on the board
 	enum teams { empty, player, computer };
 	int checkWin();
-
+	int getWinner();
 	int getTurn();
 	void setTurn(int team);
 	void changeTurn();
@@ -43,6 +45,24 @@ public:
 	void displayBoard();
 	void setAt(int x, int y, int team);
 	bool isValidIndex(int, int);
+
+	connect4Board() {
+
+		// setting all the spaces on the board to empty
+		for (int r = 0; r < 7; r++) {
+			for (int c = 0; c < 7; c++) {
+				board[r][c] = empty;
+			}
+		}
+
+
+		turn = player;
+		lastX = -1;
+		lastY = -1;
+		winner = empty;
+		gameIsOver = false;
+	}
+		
 
 };
 

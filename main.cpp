@@ -12,7 +12,11 @@ using namespace std;
 
 vector<vector<int> > interestingSituation() {
 	vector <vector <int> > board(7, vector<int>(7, 0));
+	connect4Board x;
+
 	int turn = 1;
+	x.setTurn(x.player);
+
 
 	int dropLocations[24] = { 0, 0, 3, 0, 0, 1, 1, 1, 1, 2, 0, 2, 0,  5, 2, 5, 2, 4, 4, 4, 2, 6, 6 };
 	
@@ -33,6 +37,13 @@ vector<vector<int> > interestingSituation() {
 	dropPiece(board, 6, 1);
 	dropPiece(board, 5, 1);
 	
+	x.dropPiece(0);
+	x.dropPiece(1);
+	x.dropPiece(6);
+	x.dropPiece(5);
+	x.displayBoard();
+	
+
 
 	//displayBoard(board);
 	
