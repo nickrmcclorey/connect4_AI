@@ -29,7 +29,7 @@ int changeTurn(const int &currentTurn) {
 	return (currentTurn == 1) ? 2 : 1;
 }
 
-bool connect4Board::isFull(int column) {
+bool connect4Board::isFull(int column) const {
 	if (this->at(column, 6) != empty) {
 		return true;
 	} else {
@@ -37,7 +37,7 @@ bool connect4Board::isFull(int column) {
 	}
 }
 
-bool connect4Board::isValidIndex(int x, int y) {
+bool connect4Board::isValidIndex(int x, int y) const {
 	if ((x > 6) || (y > 6) || (x < 0) || (y < 0)) {
 		return false;
 	} else {
@@ -45,7 +45,7 @@ bool connect4Board::isValidIndex(int x, int y) {
 	}
 }
 
-int connect4Board::at(int x, int y) {
+int connect4Board::at(int x, int y) const {
 	if (!this->isValidIndex(x, y)) {
 		cout << x << "," << y << " is an invalid index" << endl;
 		exit(0);
@@ -68,6 +68,9 @@ void connect4Board::setAt(int x, int y, int team) {
 
 int connect4Board::checkWin() {
 	// checking to find a horizontal row
+	cout << "last x: " << lastX << endl;
+	cout << "last y: " << lastY << endl;
+
 	int streak = 0;
 	for (int k = 0; k < 7; k++) {
 
@@ -163,11 +166,15 @@ void connect4Board::dropPiece(int dropLocation) {
 	for (int k = 6; k >= 0; k--) {
 		if (this->at(dropLocation, k) != empty) {
 			this->setAt(dropLocation, k+1, turn);
+			lastX = dropLocation;
+			lastY = k+1;
 			return;
 		}
 	}
 	
 	this->setAt(dropLocation, 0, turn);
+	lastX = dropLocation;
+	lastY = 0;
 	return;
 
 }

@@ -3,23 +3,6 @@
 #define connect4_H
 using namespace std;
 
-// from game_manager
-int changeTurn();
-int checkWin(const vector<vector<int> > &board, const int &row, const int &col, const int &turn);
-int dropPiece(vector <vector <int> > &board, const int &dropLocation, const int &turn);
-void displayBoard(const vector <vector<int> > &board);
-bool isFull(const vector<vector<int> > board, int dropLocation);
-
-
-
-// from AI.cpp
-bool userCanWin(const vector<vector<int> > &board, int turn);
-//int nextMove(const vector<vector<int> > &board);
-int showCombinations(const vector<vector<int> > board);
-void runthrough(const vector<vector<int> > &board, const vector<int> &moves);
-//bool isGoodMove(vector<vector<int> >board, int turn, const int &length, vector<int> moves);
-
-
 class connect4Board {
 private:
 
@@ -39,12 +22,12 @@ public:
 	int getTurn();
 	void setTurn(int team);
 	void changeTurn();
-	int at(int x, int y);
-	bool isFull(int column);
+	int at(int x, int y) const;
+	bool isFull(int column) const;
 	void dropPiece(int column);
 	void displayBoard();
 	void setAt(int x, int y, int team);
-	bool isValidIndex(int, int);
+	bool isValidIndex(int, int) const;
 
 	connect4Board() {
 
@@ -65,6 +48,24 @@ public:
 		
 
 };
+
+// from game_manager
+int changeTurn();
+int checkWin(const vector<vector<int> > &board, const int &row, const int &col, const int &turn);
+int dropPiece(vector <vector <int> > &board, const int &dropLocation, const int &turn);
+void displayBoard(const vector <vector<int> > &board);
+bool isFull(const vector<vector<int> > board, int dropLocation);
+
+
+
+// from AI.cpp
+bool userCanWin(const vector<vector<int> > &board, int turn);
+//int nextMove(const vector<vector<int> > &board);
+int showCombinations(connect4Board board);
+//void connect4_AI::runthrough(const vector<vector<int> > &board, const vector<int> &moves);
+//bool isGoodMove(vector<vector<int> >board, int turn, const int &length, vector<int> moves);
+
+
 
 
 #endif

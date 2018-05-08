@@ -10,9 +10,9 @@
 
 using namespace std;
 
-class fileHandler {
+class connect4_AI {
 public:
-	void runthrough(const vector<vector<int> > &board, const vector<int> &moves);
+	void runthrough(const connect4Board &board, const vector<int> &moves);
 
 	// holds all the bad moves
 	vector<vector<int> > black;
@@ -127,7 +127,7 @@ public:
 
 };
 
-//fileHandler file;
+//connect4_AI file;
 
 
 
@@ -138,46 +138,38 @@ possible to look for all combinations due to processing limitations. Increase th
 how far the AI looks ahead and increase execution time. Shorten it to quicken execution time. Always have it as even
 as its looking for losing combbinations and even moves are player moves
 */
-void fileHandler::runthrough(const vector<vector<int> > &board, const vector<int> &moves) {
+void connect4_AI::runthrough(const connect4Board &board, const vector<int> &moves) {
+
+	static int iterations = 0;
+	cout << "iterations: " << ++iterations << endl;
 
 	if (moves.size() >= 4) // keeps execution time low
 		return;
 
 
-	int turn = 1;
-	// figuring out what turn it is
-	// even turns are player turns. odd turns are done by AI
-	if (moves.size() % 2 == 0)
-		turn = 2;
-	else
-		turn = 1;
-
-	/*if (moves.size() == 0) {
-		vector<int> newMoves;
-		moves = newMoves;
-		turn = 2;
-	}*/
-
-
 	for (int k = 0; k < 7; k++) {
 
 		// checks to see if board is full in which case, a piece can't be dropped there
-		if (isFull(board, k))
+		if (board.isFull(k)) {
 			continue;
+		}
 
 		// temporary board is set to original board and then changed to look at all combinations
-		vector<vector<int> > tempBoard = board;
+		connect4Board tempBoard = board;
+		tempBoard.changeTurn();
 		vector<int> tempMoves = moves;
 		tempMoves.push_back(k);
 
 		// returns 2 if AI won and returns 1 if player won. Returns 0 if no one won
-		int winner = dropPiece(tempBoard,k,turn);
+		//int winner = dropPiece(tempBoard,k,turn);
+		tempBoard.dropPiece(k);
+		int winner = tempBoard.checkWin();
+		cout << "winner : " << winner << endl;
 
-
-		if (winner == 1) {
+		if (winner == tempBoard.player) {
 			this->blacklist(tempMoves);
-		//} else if (winner == 2) {
-			//file.goldlist(moves);
+		} else if (winner == 2) {
+			this->goldlist(moves);
 		} else {
 			runthrough(tempBoard, tempMoves);// runs this function again
 		}
@@ -197,16 +189,17 @@ bool contains(vector<int> Array, int value) {
 	return false; // if program gets to this point, no match has been foundd
 }
 
-int showCombinations(const vector<vector<int> > board) {
+int showCombinations(connect4Board board) {
 	cout << "calculating" << endl;
+	
+	//empty moveset
 	vector<int> nothing;
-	fileHandler AI_man;
+	connect4_AI AI_man;
+	board.setTurn(board.player);
 	AI_man.runthrough(board, nothing);
-	//file.shortenBlacklist();
-	//file.showBlacklist();
 	AI_man.shortenBlacklist();
 	AI_man.showBlacklist();
-
+	cout << "showed blacklist" << endl;
 
 	vector<int> goodMoves;
 	vector <int> badMoves = AI_man.badSingleMoves();
