@@ -58,22 +58,23 @@ void testingGround(connect4Board board) {
 
 
 	while (true) {	
+		
+		// get the ai to make a move
 		board.setTurn(board.computer);
+		
+		cout << "calculating next move..." << endl;
 		int AI_move = showCombinations(board);
-		system("pause");
-		board.setTurn(board.computer);
 		board.dropPiece(AI_move);
+		
 		board.changeTurn();
-		//dropPiece(board, AI_move, 2);
-		//displayBoard(board);
-
 		board.displayBoard();
 		
 		cout << "AI dropped in spot: " << AI_move << endl;
-		cout << "where do you want to drop" << endl;
+		cout << "where do you want to drop?" << endl;
+		
 		int player_move;
 		cin >> player_move;
-		//dropPiece(board, player_move, 1);
+
 		board.dropPiece(player_move);
 		board.displayBoard();
 	}
@@ -93,7 +94,7 @@ int main() {
 	
 
 	int spot_to_drop = -1;
-	cout << "Where do you want to dorp the next piece?" << endl;
+	cout << "Where do you want to drop the next piece?" << endl;
 	cin >> spot_to_drop;
 	connect4Board game;
 

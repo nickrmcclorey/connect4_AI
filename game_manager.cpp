@@ -9,9 +9,6 @@
 using namespace std;
 
 
-
-
-
 int connect4Board::getTurn() {
 	return this->turn;
 }
@@ -68,9 +65,6 @@ void connect4Board::setAt(int x, int y, int team) {
 
 int connect4Board::checkWin() {
 	// checking to find a horizontal row
-	cout << "last x: " << lastX << endl;
-	cout << "last y: " << lastY << endl;
-
 	int streak = 0;
 	for (int k = 0; k < 7; k++) {
 

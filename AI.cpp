@@ -42,7 +42,7 @@ public:
 
 	// displays all the bad moves
 	void showBlacklist() {
-		cout << "blacklist" << endl;
+		cout << "blacklist:" << endl;
 		for (int k = 0; k < black.size(); k++) {
 			for (int i = 0; i < black.at(k).size(); i++) {
 				cout << black.at(k).at(i);
@@ -140,8 +140,6 @@ as its looking for losing combbinations and even moves are player moves
 */
 void connect4_AI::runthrough(const connect4Board &board, const vector<int> &moves) {
 
-	static int iterations = 0;
-	cout << "iterations: " << ++iterations << endl;
 
 	if (moves.size() >= 4) // keeps execution time low
 		return;
@@ -164,8 +162,7 @@ void connect4_AI::runthrough(const connect4Board &board, const vector<int> &move
 		//int winner = dropPiece(tempBoard,k,turn);
 		tempBoard.dropPiece(k);
 		int winner = tempBoard.checkWin();
-		cout << "winner : " << winner << endl;
-
+		
 		if (winner == tempBoard.player) {
 			this->blacklist(tempMoves);
 		} else if (winner == 2) {
@@ -190,7 +187,6 @@ bool contains(vector<int> Array, int value) {
 }
 
 int showCombinations(connect4Board board) {
-	cout << "calculating" << endl;
 	
 	//empty moveset
 	vector<int> nothing;
@@ -198,8 +194,7 @@ int showCombinations(connect4Board board) {
 	board.setTurn(board.player);
 	AI_man.runthrough(board, nothing);
 	AI_man.shortenBlacklist();
-	AI_man.showBlacklist();
-	cout << "showed blacklist" << endl;
+	
 
 	vector<int> goodMoves;
 	vector <int> badMoves = AI_man.badSingleMoves();
