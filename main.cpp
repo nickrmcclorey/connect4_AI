@@ -63,7 +63,7 @@ void testingGround(connect4Board board) {
 		board.setTurn(board.computer);
 		
 		cout << "calculating next move..." << endl;
-		int AI_move = showCombinations(board);
+		int AI_move = nextMove(board);
 		board.dropPiece(AI_move);
 		
 		board.changeTurn();

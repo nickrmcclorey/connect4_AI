@@ -58,10 +58,8 @@ bool isFull(const vector<vector<int> > board, int dropLocation);
 
 
 
-// from AI.cpp
-bool userCanWin(const vector<vector<int> > &board, int turn);
 //int nextMove(const vector<vector<int> > &board);
-int showCombinations(connect4Board board);
+int nextMove(connect4Board board);
 //void connect4_AI::runthrough(const vector<vector<int> > &board, const vector<int> &moves);
 //bool isGoodMove(vector<vector<int> >board, int turn, const int &length, vector<int> moves);
 

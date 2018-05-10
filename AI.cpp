@@ -16,120 +16,128 @@ public:
 
 	// holds all the bad moves
 	vector<vector<int> > black;
-	// holds all the good moves. not being used yet
+	// holds all the good moves. 
 	vector<vector<int> > gold;
 	
 
-	// adds a series of moves to the blacklist
-	void blacklist(const vector<int> &moves) {
-		black.push_back(moves);
-	}
+	// adds a series of moves to a list
+	void blacklist(const vector<int> &moves);
+	void goldlist(const vector<int> &moves);
 
-	// checks to see if the blacklist contains this combination
-	bool contains(vector<int> moves) {
-		for (int k = 0; k < black.size(); k++) {
-			if (black.at(k) == moves)
-				return true;
-		}
-		return false;
-	}
-
-	// blacklists the moves leading up to a certain set of moves
-	void blacklistRoot(vector<int> moves) {
-		moves.pop_back();
-		black.push_back(moves);
-	}
+	// checks to see if the blacklist blackContains this combination
+	bool blackContains(const vector<int> &moves);
+	bool goldContains(vector<int> moves); // TODO: implemente function
 
 	// displays all the bad moves
-	void showBlacklist() {
-		cout << "blacklist:" << endl;
-		for (int k = 0; k < black.size(); k++) {
-			for (int i = 0; i < black.at(k).size(); i++) {
-				cout << black.at(k).at(i);
-			}
-			cout << endl;
-		}
+	void showBlacklist();
+	void showGoldlist(); // TODO: implemente function
 
-	}
-	
-	// adds a combination to the goldlist
-	void goldlist(vector<int> moves) {
-		gold.push_back(moves);
-	}
-
-	void goldlistRoot(vector<int> moves) {
-		moves.pop_back();
-		gold.push_back(moves);
-	}
-
-	// looks through the blacklist and find the single moves that are bad
-	// so we know what move we shoudl do know
-	vector<int> badSingleMoves (){
-		vector<int> badMoves;
-		
-		for (int k = 0; k < black.size(); k++) {
-			if (black.at(k).size() == 1)
-				badMoves.push_back(black.at(k).at(0));
-		}
-
-		return badMoves;
-	}
-
+	// looks through the blacklist or goldlist and finds the single moves that are bad
+	// so we know what move we should do now
+	vector<int> badSingleMoves();
+	vector<int> goodSingleMoves(); 
 
 	/*
 	Extremely important function. This function looks through the blacklist and figures out what moves
 	can trap you in a bad situation. If There's no way out of a situation, it blacklists the decision before that
-	so the AI doesn't get into that bad situation. It eventually narrrows down the bad moves to a single move
-	*/
-	void shortenBlacklist() {
-		for (int k = 0; k < black.size(); k++) {
-			if (black.at(k).size() % 2 == 0) {
-				black.at(k).pop_back();
+	so the AI doesn't get into that bad situation. It eventually narrrows down the bad moves to a single move */
+	void shortenBlacklist();
+	void shortenGoldlist(); // TODO: implemente function
+
+};
+
+void connect4_AI::blacklist(const vector<int> &moves) {
+	black.push_back(moves);
+}
+
+bool connect4_AI::blackContains(const vector<int> &moves) {
+	for (int k = 0; k < black.size(); k++) {
+		if (black.at(k) == moves)
+			return true;
+	}
+	return false;
+}
+
+void connect4_AI::showBlacklist() {
+	cout << "blacklist:" << endl;
+	for (int k = 0; k < black.size(); k++) {
+		for (int i = 0; i < black.at(k).size(); i++) {
+			cout << black.at(k).at(i);
+		}
+		cout << endl;
+	}
+
+}
+
+void connect4_AI::shortenBlacklist() {
+	for (int k = 0; k < black.size(); k++) {
+		if (black.at(k).size() % 2 == 0) {
+			black.at(k).pop_back();
+		}
+	}
+
+
+
+	for (int k = 0; k < black.size(); k++) {
+		// used to skip some repeating values in the blacklist
+		if ((k > 0) && (black.at(k) == black.at(k - 1))) {
+			continue;
+		}
+
+		vector<int> baseMoves = black.at(k);
+
+		int escapeOptions = 7;
+		for (int i = 0; i < 7; i++) {
+
+			baseMoves.back() = i;
+
+			if (this->blackContains(baseMoves)) {
+				escapeOptions--;
 			}
+
+		}
+
+		if (escapeOptions == 0) {
+			baseMoves.pop_back();
+			baseMoves.pop_back();
+
+			if (black.back() != baseMoves)
+				this->blacklist(baseMoves);
 		}
 
 
 
-			for (int k = 0; k < black.size(); k++) {
-				if ((k > 0) && (black.at(k) == black.at(k - 1))) {
-					continue;
-				}
-
-				vector<int> baseMoves = black.at(k);
-
-				int escapeOptions = 7;
-				for (int i = 0; i < 7; i++) {
-					
-					//baseMoves.pop_back();
-					//baseMoves.push_back(i);
-					baseMoves.back() = i;
-
-					if (this->contains(baseMoves)) {
-						escapeOptions--;
-					}
-
-				}
-
-				if (escapeOptions == 0) {
-					baseMoves.pop_back();
-					baseMoves.pop_back();
-					//black.at(k) = baseMoves;
-					if (black.back() != baseMoves)
-						this->blacklist(baseMoves);
-				}
-
-				
-			
-			}
-
-		
 	}
 
-};
 
-//connect4_AI file;
+}
+
+vector<int> connect4_AI::badSingleMoves() {
+	vector<int> badMoves;
+
+	for (int k = 0; k < black.size(); k++) {
+		if (black.at(k).size() == 1)
+			badMoves.push_back(black.at(k).at(0));
+	}
+
+	return badMoves;
+}
 
 
+void connect4_AI::goldlist(const vector<int> &moves) {
+	gold.push_back(moves);
+}
+
+vector<int> connect4_AI::goodSingleMoves() {
+	vector<int> goodMoves;
+
+	for (int k = 0; k < gold.size(); k++) {
+		if (gold.at(k).size() == 1)
+			goodMoves.push_back(black.at(k).at(0));
+	}
+
+	return goodMoves;
+}
 
 /*
 Important function. It is a recursive function that looks through all the possible combination of moves for the 
@@ -176,7 +184,7 @@ void connect4_AI::runthrough(const connect4Board &board, const vector<int> &move
 
 }
 
-bool contains(vector<int> Array, int value) {
+bool vectorContains(const vector<int> &Array, const int &value) {
 
 	for (int k = 0; k < Array.size(); k++) { // cycles through array
 		if (Array.at(k) == value) { // checks to see if value exists
@@ -186,7 +194,7 @@ bool contains(vector<int> Array, int value) {
 	return false; // if program gets to this point, no match has been foundd
 }
 
-int showCombinations(connect4Board board) {
+int nextMove(connect4Board board) {
 	
 	//empty moveset
 	vector<int> nothing;
@@ -196,10 +204,11 @@ int showCombinations(connect4Board board) {
 	AI_man.shortenBlacklist();
 	
 
+
 	vector<int> goodMoves;
 	vector <int> badMoves = AI_man.badSingleMoves();
 	for (int k = 0; k < 7; k++) {
-		if (!contains(badMoves, k))
+		if (!vectorContains(badMoves, k))
 			goodMoves.push_back(k);
 
 	}
@@ -211,21 +220,4 @@ int showCombinations(connect4Board board) {
 }
 
 
-bool userCanWin(const vector<vector<int> > &board, int turn) {
-
-	for (int k = 0; k < 7; k++) {
-
-		if (isFull(board,k))
-			continue;
-
-		vector<vector<int> > tempBoard = board;
-		int winner = dropPiece(tempBoard, k, turn);
-		
-		if (winner == turn)
-			return true;
-		
-	}
-	// if no possible wins are found return false
-	return false;
-}
 
