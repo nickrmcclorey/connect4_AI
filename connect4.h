@@ -49,17 +49,8 @@ public:
 
 };
 
-// from game_manager
-int changeTurn();
-int checkWin(const vector<vector<int> > &board, const int &row, const int &col, const int &turn);
-int dropPiece(vector <vector <int> > &board, const int &dropLocation, const int &turn);
-void displayBoard(const vector <vector<int> > &board);
-bool isFull(const vector<vector<int> > board, int dropLocation);
-
-
-
 //int nextMove(const vector<vector<int> > &board);
-int nextMove(connect4Board board);
+
 //void connect4_AI::runthrough(const vector<vector<int> > &board, const vector<int> &moves);
 //bool isGoodMove(vector<vector<int> >board, int turn, const int &length, vector<int> moves);
 
