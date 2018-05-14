@@ -6,45 +6,44 @@
 #include <fstream>
 #include <sstream>
 #include <ctime>
+
 #include "connect4.h"
+#include "AI.h"
 
 using namespace std;
 
-class connect4_AI {
-public:
-	void runthrough(const connect4Board &board, const vector<int> &moves);
 
-	// holds all the bad moves
-	vector<vector<int> > black;
-	// holds all the good moves. 
-	vector<vector<int> > gold;
-	
+int nextMove(connect4Board board) {
 
-	// adds a series of moves to a list
-	void blacklist(const vector<int> &moves);
-	void goldlist(const vector<int> &moves);
+	//empty moveset
+	vector<int> nothing;
+	connect4_AI AI_man;
 
-	// checks to see if the blacklist blackContains this combination
-	bool blackContains(const vector<int> &moves);
-	bool goldContains(vector<int> moves); // TODO: implemente function
+	// this next line done because the function will change the 
+	// turn each time, so it will be switched back immediately
+	board.setTurn(board.player);
+	// exploring all possibilities, taking note of good and bad possibilities
+	AI_man.runthrough(board, nothing);
+	// making deductions based on bad move sets
+	AI_man.shortenBlacklist();
 
-	// displays all the bad moves
-	void showBlacklist();
-	void showGoldlist(); // TODO: implemente function
 
-	// looks through the blacklist or goldlist and finds the single moves that are bad
-	// so we know what move we should do now
-	vector<int> badSingleMoves();
-	vector<int> goodSingleMoves(); 
 
-	/*
-	Extremely important function. This function looks through the blacklist and figures out what moves
-	can trap you in a bad situation. If There's no way out of a situation, it blacklists the decision before that
-	so the AI doesn't get into that bad situation. It eventually narrrows down the bad moves to a single move */
-	void shortenBlacklist();
-	void shortenGoldlist(); // TODO: implemente function
+	vector<int> goodMoves;
+	vector <int> badMoves = AI_man.badSingleMoves();
+	// get a list of moves that aren't bad
+	for (int k = 0; k < 7; k++) {
+		if (!vectorContains(badMoves, k))
+			goodMoves.push_back(k);
 
-};
+	}
+
+	srand(time(0));
+	int goodMoveIndex = rand() % goodMoves.size();
+	return goodMoves.at(goodMoveIndex);
+
+}
+
 
 void connect4_AI::blacklist(const vector<int> &moves) {
 	black.push_back(moves);
@@ -128,6 +127,16 @@ void connect4_AI::goldlist(const vector<int> &moves) {
 	gold.push_back(moves);
 }
 
+bool connect4_AI::goldContains(const vector<int> &moves) {
+	
+	for (int k = 0; k < gold.size(); k++) {
+		if (gold.at(k) == moves)
+			return true;
+	}
+	// at this point, the combination has not been found
+	return false;
+}
+
 vector<int> connect4_AI::goodSingleMoves() {
 	vector<int> goodMoves;
 
@@ -138,6 +147,18 @@ vector<int> connect4_AI::goodSingleMoves() {
 
 	return goodMoves;
 }
+
+void connect4_AI::showGoldlist() {
+	cout << "Goldlist:" << endl;
+
+	for (int k = 0; k < gold.size(); k++) {
+		for (int i = 0; i < gold.at(k).size(); i++) {
+			cout << gold.at(k).at(i);
+		}
+		cout << endl;
+	}
+}
+
 
 /*
 Important function. It is a recursive function that looks through all the possible combination of moves for the 
@@ -194,30 +215,7 @@ bool vectorContains(const vector<int> &Array, const int &value) {
 	return false; // if program gets to this point, no match has been foundd
 }
 
-int nextMove(connect4Board board) {
-	
-	//empty moveset
-	vector<int> nothing;
-	connect4_AI AI_man;
-	board.setTurn(board.player);
-	AI_man.runthrough(board, nothing);
-	AI_man.shortenBlacklist();
-	
 
-
-	vector<int> goodMoves;
-	vector <int> badMoves = AI_man.badSingleMoves();
-	for (int k = 0; k < 7; k++) {
-		if (!vectorContains(badMoves, k))
-			goodMoves.push_back(k);
-
-	}
-
-	srand(time(0));
-	int goodMoveIndex = rand() % goodMoves.size();
-	return goodMoves.at(goodMoveIndex);
-
-}
 
 
 
