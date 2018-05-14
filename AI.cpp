@@ -24,10 +24,8 @@ int nextMove(connect4Board board) {
 	board.setTurn(board.player);
 	// exploring all possibilities, taking note of good and bad possibilities
 	AI_man.runthrough(board, nothing);
-	cout << "almost done..." << endl;
 	// making deductions based on bad move sets
 	AI_man.shortenBlacklist();
-
 
 
 	vector<int> goodMoves;
