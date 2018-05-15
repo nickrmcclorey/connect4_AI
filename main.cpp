@@ -16,7 +16,7 @@ connect4Board interestingSituation() {
 	
 	connect4Board x;
 
-	x.setTurn(x.player);
+	x.setTurn(x.computer);
 
 	x.dropPiece(0);
 	x.dropPiece(1);

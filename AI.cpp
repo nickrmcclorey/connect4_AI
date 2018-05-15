@@ -27,9 +27,14 @@ int nextMove(connect4Board board) {
 	
 	// making deductions based on bad move sets
 	AI_man.shortenBlacklist();
+	AI_man.shortenGoldlist();
 	
 
-	vector<int> goodMoves;
+	vector<int> goodMoves = AI_man.goodSingleMoves();
+	if (goodMoves.size() > 0) {
+		return goodMoves.at(0);
+	}
+
 	vector <int> badMoves = AI_man.badSingleMoves();
 	// get a list of moves that aren't bad
 	for (int k = 0; k < 7; k++) {
@@ -166,7 +171,7 @@ vector<int> connect4_AI::goodSingleMoves() {
 
 	for (int k = 0; k < gold.size(); k++) {
 		if (gold.at(k).size() == 1)
-			goodMoves.push_back(black.at(k).at(0));
+			goodMoves.push_back(gold.at(k).at(0));
 	}
 
 	return goodMoves;
@@ -186,22 +191,36 @@ void connect4_AI::showGoldlist() {
 void connect4_AI::shortenGoldlist() {
 
 	for (int k = 0; k < gold.size(); k++) {
-		if (gold.at(k).size() % 2 == 1) {
+		if (gold.at(k).size() % 2 == 1 && gold.at(k).size() > 1) {
 			gold.at(k).pop_back();
 		}
 	}
 
 	for (int k = 0; k < gold.size(); k++) {
+		if (gold.at(k).size() <= 1) {
+			break;
+		}
+		
 		vector<int> modified = gold.at(k);
 		
 		int escapeOptions = 7;
 		for (int i = 0; i < 7; i++) {
+
 			modified.back() = i;
+
 			if (goldContains(modified)) {
 				escapeOptions--;
+			} else {
+				break;
 			}
+
 		}
-		
+		if (escapeOptions == 0 && modified.size() > 1) {
+			modified.pop_back();
+			this->goldlist(modified);
+		}
+
+
 	}
 }
 
@@ -241,7 +260,7 @@ void connect4_AI::runthrough(const connect4Board &board, const vector<int> &move
 		if (winner == tempBoard.player) {
 			this->blacklist(tempMoves);
 		} else if (winner == 2) {
-			this->goldlist(moves);
+			this->goldlist(tempMoves);
 		} else {
 			runthrough(tempBoard, tempMoves);// runs this function again
 		}
