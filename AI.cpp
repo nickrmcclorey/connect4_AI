@@ -24,9 +24,10 @@ int nextMove(connect4Board board) {
 	board.setTurn(board.player);
 	// exploring all possibilities, taking note of good and bad possibilities
 	AI_man.runthrough(board, nothing);
+	
 	// making deductions based on bad move sets
 	AI_man.shortenBlacklist();
-
+	
 
 	vector<int> goodMoves;
 	vector <int> badMoves = AI_man.badSingleMoves();
@@ -68,8 +69,21 @@ void connect4_AI::showBlacklist() {
 }
 
 bool containsRoot(const vector<int> &base, const vector<int> &extension) {
-	for (int k = 0; k < base.size(); k++) {
+	for (int k = 0; k < base.size() && k < extension.size()	; k++) {
 		if (base.at(k) != extension.at(k)) {
+			return false;
+		}
+	}
+	return true;
+}
+
+bool areSiblings(const vector<int> &vec1, const vector<int> &vec2) {
+	if (vec1.size() != vec2.size()) {
+		return false;
+	}
+
+	for (int k = 0; k < vec1.size() - 1; k++) {
+		if (vec1.at(k) != vec2.at(k)) {
 			return false;
 		}
 	}
@@ -87,7 +101,7 @@ void connect4_AI::shortenBlacklist() {
 
 	for (int k = 0; k < black.size(); k++) {
 		// used to skip some repeating values in the blacklist
-		if ((k > 0) && (black.at(k) == black.at(k - 1) || containsRoot(black.back(),black.at(k)))) {
+		if ((k > 0) && (black.at(k) == black.at(k - 1) || areSiblings(black.at(k),black.at(k-1)))) {
 			continue;
 		}
 
@@ -166,6 +180,28 @@ void connect4_AI::showGoldlist() {
 			cout << gold.at(k).at(i);
 		}
 		cout << endl;
+	}
+}
+
+void connect4_AI::shortenGoldlist() {
+
+	for (int k = 0; k < gold.size(); k++) {
+		if (gold.at(k).size() % 2 == 1) {
+			gold.at(k).pop_back();
+		}
+	}
+
+	for (int k = 0; k < gold.size(); k++) {
+		vector<int> modified = gold.at(k);
+		
+		int escapeOptions = 7;
+		for (int i = 0; i < 7; i++) {
+			modified.back() = i;
+			if (goldContains(modified)) {
+				escapeOptions--;
+			}
+		}
+		
 	}
 }
 
