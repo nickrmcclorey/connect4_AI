@@ -1,2 +1,2 @@
 cls
-g++ main.cpp AI.cpp game_manager.cpp
+g++ main.cpp AI.cpp game_manager.cpp input.cpp

@@ -4,6 +4,8 @@
 #include <vector>
 #include <cstdio>
 #include <fstream>
+
+#include "input.h"
 #include "connect4.h"
 
 using namespace std;

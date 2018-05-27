@@ -9,6 +9,7 @@
 
 #include "connect4.h"
 #include "AI.h"
+#include "input.h"
 
 using namespace std;
 
@@ -71,6 +72,30 @@ void connect4_AI::showBlacklist() {
 		cout << endl;
 	}
 
+}
+
+vector<vector<int> > removeDups(vector<vector<int> > array) {
+	vector<vector<int> > noDups(0);
+
+	for (int k = 0; k < array.size(); k++) {
+
+		bool duplicate = false;
+
+		vector<int> entry = array.at(k);
+		for (int i = 0; i < k; i++) { // inner loop checks for duplicates
+			if (entry == array.at(i)) {
+				duplicate = true;
+			}
+		}
+
+		if (!duplicate) {
+			noDups.push_back(array.at(k));
+		}
+
+	}
+
+	// This is just to keep the compiler happy
+	return noDups;
 }
 
 bool containsRoot(const vector<int> &base, const vector<int> &extension) {
@@ -137,6 +162,7 @@ void connect4_AI::shortenBlacklist() {
 
 	}
 
+	black = removeDups(black);
 
 }
 
@@ -259,8 +285,10 @@ void connect4_AI::runthrough(const connect4Board &board, const vector<int> &move
 		
 		if (winner == tempBoard.player) {
 			this->blacklist(tempMoves);
+			break;
 		} else if (winner == 2) {
 			this->goldlist(tempMoves);
+			break;
 		} else {
 			runthrough(tempBoard, tempMoves);// runs this function again
 		}
