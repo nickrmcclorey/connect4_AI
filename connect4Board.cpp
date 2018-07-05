@@ -6,7 +6,7 @@
 #include <fstream>
 
 #include "input.h"
-#include "connect4.h"
+#include "connect4Board.h"
 
 using namespace std;
 
@@ -21,11 +21,6 @@ void connect4Board::setTurn(int team) {
 
 void connect4Board::changeTurn() {
 	this->turn = (this->turn == player) ? computer : player;
-}
-
-
-int changeTurn(const int &currentTurn) {
-	return (currentTurn == 1) ? 2 : 1;
 }
 
 bool connect4Board::isFull(int column) const {

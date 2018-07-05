@@ -7,14 +7,38 @@
 #include <sstream>
 #include <ctime>
 
-#include "connect4.h"
+#include "connect4Board.h"
 #include "AI.h"
 #include "input.h"
 
 using namespace std;
 
 
-int nextMove(connect4Board board) {
+void connect4_AI::setFriendly(int input) {
+	friendly = input;
+}
+
+void connect4_AI::setOpposing(int input) {
+	opposing = input;
+}
+
+void connect4_AI::setTurnsToLookAhead(int input) {
+	turnsToLookAhead = input;
+}
+
+connect4_AI::connect4_AI() {
+	friendly = connect4Board::computer;
+	opposing = connect4Board::player;
+	turnsToLookAhead = 6;
+}
+
+connect4_AI::connect4_AI(int Friend, int Opposing, int turnsAhead) {
+	this->friendly = Friend;
+	this->opposing = Opposing;
+	this->turnsToLookAhead = turnsAhead;
+}
+
+int connect4_AI::nextMove(connect4Board board) {
 
 	//empty moveset
 	vector<int> nothing;
@@ -261,7 +285,7 @@ as its looking for losing combbinations and even moves are player moves
 void connect4_AI::runthrough(const connect4Board &board, const vector<int> &moves) {
 
 
-	if (moves.size() >= 6) // keeps execution time low
+	if (moves.size() >= turnsToLookAhead) // keeps execution time low
 		return;
 
 
@@ -283,10 +307,10 @@ void connect4_AI::runthrough(const connect4Board &board, const vector<int> &move
 		tempBoard.dropPiece(k);
 		int winner = tempBoard.checkWin();
 		
-		if (winner == tempBoard.player) {
+		if (winner == opposing) {
 			this->blacklist(tempMoves);
 			break;
-		} else if (winner == 2) {
+		} else if (winner == friendly) {
 			this->goldlist(tempMoves);
 			break;
 		} else {

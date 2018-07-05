@@ -7,8 +7,9 @@
 #include <sstream>
 
 #include "AI.h"
-#include "connect4.h"
+#include "connect4Board.h"
 #include "input.h"
+#include "tester.h"
 
 using namespace std;
 
@@ -19,22 +20,11 @@ void myPause() {
 }
 
 
-connect4Board interestingSituation(int team) {
-	
-	connect4Board x;
 
-	x.setTurn(team);
-
-	x.dropPiece(0);
-	x.dropPiece(1);
-	x.dropPiece(6);
-	x.dropPiece(5);
-	
-	return x;
-}
 
 
 void demonstration() {
+	connect4_AI ai;
 	connect4Board board = interestingSituation(2);
 	cout << "original" << endl;
 	board.displayBoard();
@@ -50,7 +40,7 @@ void demonstration() {
 	// get the ai to make a move
 	board.setTurn(board.computer);
 	cout << "calculating next move..." << endl;
-	int AI_move = nextMove(board);
+	int AI_move = ai.nextMove(board);
 	board.dropPiece(AI_move);
 		
 	board.changeTurn();
@@ -69,7 +59,7 @@ void demonstration() {
 	cout << "press enter to have the AI go" << endl;
 	getline(cin, nothing);
 
-	AI_move = nextMove(board);
+	AI_move = ai.nextMove(board);
 	board.changeTurn();
 	board.dropPiece(AI_move);
 	board.displayBoard();
@@ -89,7 +79,7 @@ void demonstration() {
 	// wait for enter
 	getline(cin, nothing);
 
-	AI_move = nextMove(board);
+	AI_move = ai.nextMove(board);
 	board.changeTurn();
 	board.dropPiece(AI_move);
 	board.displayBoard();
@@ -105,6 +95,7 @@ void demonstration() {
 void playConnect4(bool AI_is_playing) {
 	int spot_to_drop = 0;
 	connect4Board game;
+	connect4_AI ai;
 
 	do {
 		
@@ -126,7 +117,7 @@ void playConnect4(bool AI_is_playing) {
 
 		game.changeTurn();
 		if (AI_is_playing) {
-			spot_to_drop = nextMove(game);
+			spot_to_drop = ai.nextMove(game);
 		} else {
 			cout << "Where do you want to drop the next piece?" << endl;
 			spot_to_drop = askInt();
@@ -136,7 +127,8 @@ void playConnect4(bool AI_is_playing) {
 	} while ((spot_to_drop >= 0) && (spot_to_drop <= 6) && (game.checkWin() == 0));
 }
 
-int main() {
+
+void menu() {
 
 	int userChoice = -1;
 	do {
@@ -161,7 +153,12 @@ int main() {
 	
 	string userEntered;
 	getline(cin, userEntered);
-	return 0;
 	
 }
 
+int main() {
+	
+	testAI();
+	menu();
+	
+}

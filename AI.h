@@ -1,6 +1,6 @@
 #ifndef AI_h
 #define AI_h
-#include "connect4.h"
+#include "connect4Board.h"
 
 using namespace std;
 
@@ -11,12 +11,20 @@ private:
 	// holds all the good moves. 
 	vector<vector<int> > gold;
 
-public:
+	int friendly;
+	int opposing;
+	int turnsToLookAhead;
+
 	void runthrough(const connect4Board &board, const vector<int> &moves);
 
 	// adds a series of moves to a list
 	void blacklist(const vector<int> &moves);
 	void goldlist(const vector<int> &moves);
+
+public:
+	int nextMove(connect4Board board);
+	
+
 
 	// checks to see if the blacklist blackContains this combination
 	bool blackContains(const vector<int> &moves);
@@ -36,13 +44,20 @@ public:
 	can trap you in a bad situation. If There's no way out of a situation, it blacklists the decision before that
 	so the AI doesn't get into that bad situation. It eventually narrrows down the bad moves to a single move */
 	void shortenBlacklist();
-	void shortenGoldlist(); // TODO: implemente function
+	void shortenGoldlist(); 
+
+	void setFriendly(int);
+	void setOpposing(int);
+	void setTurnsToLookAhead(int);
+
+	connect4_AI();
+	connect4_AI(int, int, int);
 
 };
 
 // simply check to see if a value is somewhere inside a vector
 bool vectorContains(const vector<int> &Array, const int &value);
 // this function utilizes the above class to get the next move
-int nextMove(connect4Board board);
+
 
 #endif
