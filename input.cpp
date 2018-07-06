@@ -43,6 +43,11 @@ string removeSpaces(string copy) {
 }
 
 bool isInt(string input) {
+	
+	if (input.size() == 0) {
+		return false;
+	}
+
 	for (int k = 0; k < input.size(); k++) {
 		char letter = input.at(k);
 		if (letter > '9' || letter < '0')

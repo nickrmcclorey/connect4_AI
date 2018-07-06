@@ -24,7 +24,7 @@ void connect4Board::changeTurn() {
 }
 
 bool connect4Board::isFull(int column) const {
-	if (this->at(column, 6) != empty) {
+	if (this->at(column, 5) != empty) {
 		return true;
 	} else {
 		return false;
@@ -32,7 +32,7 @@ bool connect4Board::isFull(int column) const {
 }
 
 bool connect4Board::isValidIndex(int x, int y) const {
-	if ((x > 6) || (y > 6) || (x < 0) || (y < 0)) {
+	if ((x > 6) || (y > 5) || (x < 0) || (y < 0)) {
 		return false;
 	} else {
 		return true;
@@ -79,7 +79,7 @@ int connect4Board::checkWin() {
 
 	// checkign for vertical win
 	streak = 0;
-	for (int k = 0; k < 7; k++) {
+	for (int k = 0; k < 6; k++) {
 
 		if (this->at(lastX, k) == turn) {
 			streak++;
@@ -97,7 +97,7 @@ int connect4Board::checkWin() {
 
 	// finding edge of board
 	int r = lastY; int c = lastX;
-	while ((r < 6) && (c < 6)) {
+	while ((r < 5) && (c < 6)) {
 		r++;
 		c++;
 	}
@@ -130,7 +130,7 @@ int connect4Board::checkWin() {
 
 	// looking for streaks
 	streak = 0;
-	while ((r <= 6) && (c >= 0)) {
+	while ((r <= 5) && (c >= 0)) {
 		if (this->at(c, r) == turn) {
 			streak++;
 		}
@@ -153,7 +153,7 @@ int connect4Board::checkWin() {
 
 void connect4Board::dropPiece(int dropLocation) {
 	
-	for (int k = 6; k >= 0; k--) {
+	for (int k = 5; k >= 0; k--) {
 		if (this->at(dropLocation, k) != empty) {
 			this->setAt(dropLocation, k+1, turn);
 			lastX = dropLocation;
@@ -179,7 +179,7 @@ void connect4Board::displayBoard() {
 	cout << endl << endl;
 
 	// display board fromm top down
-	for (int row = 6; row >= 0; row--) {
+	for (int row = 5; row >= 0; row--) {
 		for (int col = 0; col < 7; col++) {
 			cout << this->at(col, row) << " ";
 		}

@@ -6,7 +6,7 @@ using namespace std;
 class connect4Board {
 private:
 
-	int board[7][7];
+	int board[7][6];
 	int turn;
 	bool gameIsOver;
 	int winner;
@@ -18,7 +18,6 @@ public:
 	// the three possible pieces on the board
 	enum teams { empty, player, computer };
 	int checkWin();
-	int getWinner();
 	int getTurn();
 	void setTurn(int team);
 	void changeTurn();

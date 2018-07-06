@@ -5,6 +5,7 @@
 #include <cstdio>
 #include <fstream>
 #include <sstream>
+#include <ctime>
 
 #include "AI.h"
 #include "connect4Board.h"
@@ -14,8 +15,10 @@
 using namespace std;
 
 void myPause() {
+	while (cin) {
+		cin.ignore();
+	}
 	string nothing;
-	cin.ignore();
 	getline(cin, nothing);
 }
 
@@ -91,6 +94,43 @@ void demonstration() {
 
 }
 
+void advisorMode() {
+	cout << "You are represented by 1" << endl;
+	cout << "Youre opponent is represented by 2" << endl;
+
+	connect4Board game;
+	connect4_AI advisor(1,2,6);
+	cout << "are you or your opponent going first?" << endl;
+	cout << "[1] you are going first" << endl;
+	cout << "[2] your opponent is going first" << endl;
+
+	int firstTurn = askInt("");
+	game.setTurn(firstTurn);
+
+	while (true) {
+		game.displayBoard();
+
+		if (game.getTurn() == 1) {
+			cout << "We suggest you drop in spot " << advisor.nextMove(game) << endl;
+			game.dropPiece(askInt("Where will you drop the next piece?"));
+			
+		} else if (game.getTurn() == 2) {
+			game.dropPiece(askInt("Where did your opponent drop?"));
+			
+		} else {
+			cout << "error, turn wasn't changed properly" << endl;
+			exit(0);
+		}
+
+		if (game.checkWin() != 0) {
+			break;
+		}
+
+		game.changeTurn();
+
+	}
+
+}
 
 void playConnect4(bool AI_is_playing) {
 	int spot_to_drop = 0;
@@ -128,6 +168,36 @@ void playConnect4(bool AI_is_playing) {
 }
 
 
+void bot_vs_bot() {
+	connect4Board game; game.setTurn(1);
+	connect4_AI ai1(1, 2, 4);
+	connect4_AI ai2(2, 1, 4);
+
+
+	while (true) {
+		game.dropPiece(ai1.nextMove(game));
+		if (game.checkWin() > 0) {
+			break;
+		}
+		game.displayBoard();
+
+		game.changeTurn();
+		game.dropPiece(ai2.nextMove(game));
+		if (game.checkWin() > 0) {
+			break;
+		}
+		game.displayBoard();
+
+		game.changeTurn();
+	}
+
+	game.displayBoard();
+	cout << game.getTurn() << " won" << endl;
+
+}
+
+
+
 void menu() {
 
 	int userChoice = -1;
@@ -136,8 +206,10 @@ void menu() {
 		cout << "[1] Two Player game" << endl;
 		cout << "[2] One Player game against my AI" << endl;
 		cout << "[3] Demonstration" << endl;
+		cout << "[4] Bot vs Bot" << endl;
+		cout << "[5] Advisor mode" << endl;
 		userChoice = askInt();
-	} while (userChoice > 3 || userChoice < 1);
+	} while (userChoice > 5 || userChoice < 1);
 
 	switch (userChoice) {
 	case (1):
@@ -149,15 +221,24 @@ void menu() {
 	case(3):
 		demonstration();
 		break;
+	case (4):
+		bot_vs_bot();
+		break;
+	case (5):
+		advisorMode();
+		break;
 	}
 	
-	string userEntered;
-	getline(cin, userEntered);
+	myPause();
 	
 }
 
+
+
 int main() {
+	srand(time(0));
 	
+	//bot_vs_bot();
 	testAI();
 	menu();
 	

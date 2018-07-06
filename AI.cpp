@@ -39,6 +39,8 @@ connect4_AI::connect4_AI(int Friend, int Opposing, int turnsAhead) {
 }
 
 int connect4_AI::nextMove(connect4Board board) {
+	gold.clear();
+	black.clear();
 
 	//empty moveset
 	vector<int> nothing;
@@ -63,14 +65,20 @@ int connect4_AI::nextMove(connect4Board board) {
 	vector <int> badMoves = AI_man.badSingleMoves();
 	// get a list of moves that aren't bad
 	for (int k = 0; k < 7; k++) {
-		if (!vectorContains(badMoves, k))
+		if (!vectorContains(badMoves, k) && !board.isFull(k))
 			goodMoves.push_back(k);
 
 	}
 
-	srand(time(0));
-	int goodMoveIndex = rand() % goodMoves.size();
-	return goodMoves.at(goodMoveIndex);
+	//srand(time(0));
+	if (goodMoves.size() > 0) {
+		int goodMoveIndex = rand() % goodMoves.size();
+		return goodMoves.at(goodMoveIndex);
+	} else {
+		return rand() % 7;
+	}
+
+
 
 }
 
