@@ -10,7 +10,6 @@
 
 using namespace std;
 
-
 int connect4Board::getTurn() {
 	return this->turn;
 }
@@ -118,7 +117,6 @@ int connect4Board::checkWin() {
 
 		r--;
 		c--;
-
 	}
 
 	// finding the edge
@@ -144,9 +142,7 @@ int connect4Board::checkWin() {
 
 		r++;
 		c--;
-
 	}
-
 
 	return 0;
 }

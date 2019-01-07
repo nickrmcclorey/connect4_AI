@@ -43,7 +43,7 @@ int connect4_AI::nextMove(connect4Board board) {
 	black.clear();
 
 	//empty moveset
-	vector<int> nothing;
+	string nothing = "";
 	connect4_AI AI_man;
 
 	// this next line done because the function will change the 
@@ -55,7 +55,6 @@ int connect4_AI::nextMove(connect4Board board) {
 	// making deductions based on bad move sets
 	AI_man.shortenBlacklist();
 	AI_man.shortenGoldlist();
-	
 
 	vector<int> goodMoves = AI_man.goodSingleMoves();
 	if (goodMoves.size() > 0) {
@@ -67,7 +66,6 @@ int connect4_AI::nextMove(connect4Board board) {
 	for (int k = 0; k < 7; k++) {
 		if (!vectorContains(badMoves, k) && !board.isFull(k))
 			goodMoves.push_back(k);
-
 	}
 
 	//srand(time(0));
@@ -77,17 +75,13 @@ int connect4_AI::nextMove(connect4Board board) {
 	} else {
 		return rand() % 7;
 	}
-
-
-
 }
 
-
-void connect4_AI::blacklist(const vector<int> &moves) {
+void connect4_AI::blacklist(const string &moves) {
 	black.insert(moves);
 }
 
-bool connect4_AI::blackContains(const vector<int> &moves) {
+bool connect4_AI::blackContains(const string &moves) {
 	return black.find(moves) != black.end();
 }
 
@@ -151,11 +145,10 @@ bool areSiblings(const vector<int> &vec1, const vector<int> &vec2) {
 void connect4_AI::shortenBlacklist() {
 	for (auto k = black.begin(); k != black.end(); k++) {
 		if (k->size() % 2 == 0) {
-			k->pop_back();
+			string temp = *k;
+			black.insert(temp);
 		}
 	}
-
-
 
 	for (auto k = black.begin(); k != black.end(); k++) {
 		// used to skip some repeating values in the blacklist
@@ -163,7 +156,7 @@ void connect4_AI::shortenBlacklist() {
 		// 	continue;
 		// }
 
-		vector<int> baseMoves = *k;
+		string baseMoves = *k;
 
 		int escapeOptions = 7;
 		for (int i = 0; i < 7; i++) {
@@ -201,26 +194,20 @@ vector<int> connect4_AI::badSingleMoves() {
 }
 
 
-void connect4_AI::goldlist(const vector<int> &moves) {
-	gold.push_back(moves);
+void connect4_AI::goldlist(const string &moves) {
+	gold.insert(moves);
 }
 
-bool connect4_AI::goldContains(const vector<int> &moves) {
-	
-	for (int k = 0; k < gold.size(); k++) {
-		if (gold.at(k) == moves)
-			return true;
-	}
-	// at this point, the combination has not been found
-	return false;
+bool connect4_AI::goldContains(const string &moves) {
+	return gold.find(moves) != gold.end();
 }
 
 vector<int> connect4_AI::goodSingleMoves() {
 	vector<int> goodMoves;
 
-	for (int k = 0; k < gold.size(); k++) {
-		if (gold.at(k).size() == 1)
-			goodMoves.push_back(gold.at(k).at(0));
+	for (auto k = gold.begin(); k != gold.end(); k++) {
+		if (k->size() == 1)
+			goodMoves.push_back(static_cast<int>(k->at(0)));
 	}
 
 	return goodMoves;
@@ -228,29 +215,27 @@ vector<int> connect4_AI::goodSingleMoves() {
 
 void connect4_AI::showGoldlist() {
 	cout << "Goldlist:" << endl;
-
-	for (int k = 0; k < gold.size(); k++) {
-		for (int i = 0; i < gold.at(k).size(); i++) {
-			cout << gold.at(k).at(i);
-		}
-		cout << endl;
+	for (auto entry = gold.begin(); entry != gold.end(); entry++) {
+		cout << *entry << endl;
 	}
 }
 
 void connect4_AI::shortenGoldlist() {
 
-	for (int k = 0; k < gold.size(); k++) {
-		if (gold.at(k).size() % 2 == 1 && gold.at(k).size() > 1) {
-			gold.at(k).pop_back();
+	for (auto k = gold.begin(); k != gold.end(); k++) {
+		if (k->size() % 2 == 1 && k->size() > 1) {
+			string newGoldEntry = *k;
+			newGoldEntry.pop_back();
+			gold.insert(newGoldEntry);
 		}
 	}
 
-	for (int k = 0; k < gold.size(); k++) {
-		if (gold.at(k).size() <= 1) {
+	for (auto k = gold. begin(); k != gold.end(); k++) {
+		if (k->size() <= 1) {
 			break;
 		}
 		
-		vector<int> modified = gold.at(k);
+		string modified = *k;
 		
 		int escapeOptions = 7;
 		for (int i = 0; i < 7; i++) {
@@ -262,8 +247,8 @@ void connect4_AI::shortenGoldlist() {
 			} else {
 				break;
 			}
-
 		}
+
 		if (escapeOptions == 0 && modified.size() > 1) {
 			modified.pop_back();
 			this->goldlist(modified);
@@ -279,12 +264,10 @@ possible to look for all combinations due to processing limitations. Increase th
 how far the AI looks ahead and increase execution time. Shorten it to quicken execution time. Always have it as even
 as its looking for losing combbinations and even moves are player moves
 */
-void connect4_AI::runthrough(const connect4Board &board, const vector<int> &moves) {
-
+void connect4_AI::runthrough(const connect4Board &board, const string &moves) {
 
 	if (moves.size() >= turnsToLookAhead) // keeps execution time low
 		return;
-
 
 	for (int k = 0; k < 7; k++) {
 
@@ -296,7 +279,7 @@ void connect4_AI::runthrough(const connect4Board &board, const vector<int> &move
 		// temporary board is set to original board and then changed to look at all combinations
 		connect4Board tempBoard = board;
 		tempBoard.changeTurn();
-		vector<int> tempMoves = moves;
+		string tempMoves = moves;
 		tempMoves.push_back(k);
 
 		// returns 2 if AI won and returns 1 if player won. Returns 0 if no one won
@@ -313,10 +296,7 @@ void connect4_AI::runthrough(const connect4Board &board, const vector<int> &move
 		} else {
 			runthrough(tempBoard, tempMoves);// runs this function again
 		}
-
-
 	}
-
 }
 
 bool vectorContains(const vector<int> &Array, const int &value) {

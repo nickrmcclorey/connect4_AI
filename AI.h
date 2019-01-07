@@ -1,5 +1,7 @@
 #ifndef AI_h
 #define AI_h
+#include <unordered_set>
+#include <string>
 #include "connect4Board.h"
 
 using namespace std;
@@ -7,19 +9,19 @@ using namespace std;
 class connect4_AI {
 private:
 	// holds all the bad moves
-	unordered_set<vector<int> > black;
+	unordered_set<string> black;
 	// holds all the good moves. 
-	vector<vector<int> > gold;
+	unordered_set<string> gold;
 
 	int friendly;
 	int opposing;
 	int turnsToLookAhead;
 
-	void runthrough(const connect4Board &board, const vector<int> &moves);
+	void runthrough(const connect4Board &board, const string &moves);
 
 	// adds a series of moves to a list
-	void blacklist(const vector<int> &moves);
-	void goldlist(const vector<int> &moves);
+	void blacklist(const string &moves);
+	void goldlist(const string &moves);
 
 public:
 	int nextMove(connect4Board board);
@@ -27,8 +29,8 @@ public:
 
 
 	// checks to see if the blacklist blackContains this combination
-	bool blackContains(const vector<int> &moves);
-	bool goldContains(const vector<int> &moves); 
+	bool blackContains(const string &moves);
+	bool goldContains(const string &moves); 
 
 
 	void showBlacklist();

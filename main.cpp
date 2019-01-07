@@ -6,7 +6,6 @@
 #include <fstream>
 #include <sstream>
 #include <ctime>
-
 #include "AI.h"
 #include "connect4Board.h"
 #include "input.h"
@@ -21,10 +20,6 @@ void myPause() {
 	string nothing;
 	getline(cin, nothing);
 }
-
-
-
-
 
 void demonstration() {
 	connect4_AI ai;
@@ -88,10 +83,8 @@ void demonstration() {
 	board.displayBoard();
 	cout << "The AI saw that if it didn't go in the middle gap,\nthere's a way for the player to lock in victory" << endl;
 	cout << "where do you want to drop?" << endl;
-	
 
 	exit(0);
-
 }
 
 void advisorMode() {
@@ -127,9 +120,7 @@ void advisorMode() {
 		}
 
 		game.changeTurn();
-
 	}
-
 }
 
 void playConnect4(bool AI_is_playing) {
@@ -167,12 +158,10 @@ void playConnect4(bool AI_is_playing) {
 	} while ((spot_to_drop >= 0) && (spot_to_drop <= 6) && (game.checkWin() == 0));
 }
 
-
 void bot_vs_bot() {
 	connect4Board game; game.setTurn(1);
 	connect4_AI ai1(1, 2, 4);
 	connect4_AI ai2(2, 1, 4);
-
 
 	while (true) {
 		game.dropPiece(ai1.nextMove(game));
@@ -195,8 +184,6 @@ void bot_vs_bot() {
 	cout << game.getTurn() << " won" << endl;
 
 }
-
-
 
 void menu() {
 
@@ -228,18 +215,11 @@ void menu() {
 		advisorMode();
 		break;
 	}
-	
 	myPause();
-	
 }
-
-
 
 int main() {
 	srand(time(0));
-	
-	//bot_vs_bot();
 	testAI();
 	menu();
-	
 }
