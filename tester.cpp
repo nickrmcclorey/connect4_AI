@@ -6,9 +6,7 @@
 #include "connect4Board.h"
 #include "tester.h"
 
-
 using namespace std;
-
 
 connect4Board interestingSituation(int team) {
 
@@ -48,7 +46,4 @@ void testAI() {
 	if (ai.nextMove(game) != 4) {
 		testFailed();
 	}
-
-	
-
 }

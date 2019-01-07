@@ -7,7 +7,7 @@ using namespace std;
 class connect4_AI {
 private:
 	// holds all the bad moves
-	vector<vector<int> > black;
+	unordered_set<vector<int> > black;
 	// holds all the good moves. 
 	vector<vector<int> > gold;
 

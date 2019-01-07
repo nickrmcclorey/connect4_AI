@@ -5,8 +5,8 @@
 #include <cstdio>
 #include <fstream>
 #include <sstream>
+#include <unordered_set>
 #include <ctime>
-
 #include "connect4Board.h"
 #include "AI.h"
 #include "input.h"
@@ -84,22 +84,18 @@ int connect4_AI::nextMove(connect4Board board) {
 
 
 void connect4_AI::blacklist(const vector<int> &moves) {
-	black.push_back(moves);
+	black.insert(moves);
 }
 
 bool connect4_AI::blackContains(const vector<int> &moves) {
-	for (int k = 0; k < black.size(); k++) {
-		if (black.at(k) == moves)
-			return true;
-	}
-	return false;
+	return black.find(moves) != black.end();
 }
 
 void connect4_AI::showBlacklist() {
 	cout << "blacklist:" << endl;
-	for (int k = 0; k < black.size(); k++) {
-		for (int i = 0; i < black.at(k).size(); i++) {
-			cout << black.at(k).at(i);
+	for (auto k = black.begin(); k != black.end(); k++) {
+		for (int i = 0; i < k->size(); i++) {
+			cout << k->at(i);
 		}
 		cout << endl;
 	}
@@ -153,21 +149,21 @@ bool areSiblings(const vector<int> &vec1, const vector<int> &vec2) {
 }
 
 void connect4_AI::shortenBlacklist() {
-	for (int k = 0; k < black.size(); k++) {
-		if (black.at(k).size() % 2 == 0) {
-			black.at(k).pop_back();
+	for (auto k = black.begin(); k != black.end(); k++) {
+		if (k->size() % 2 == 0) {
+			k->pop_back();
 		}
 	}
 
 
 
-	for (int k = 0; k < black.size(); k++) {
+	for (auto k = black.begin(); k != black.end(); k++) {
 		// used to skip some repeating values in the blacklist
-		if ((k > 0) && (black.at(k) == black.at(k - 1) || areSiblings(black.at(k),black.at(k-1)))) {
-			continue;
-		}
+		// if ((k > 0) && (black.at(k) == black.at(k - 1) || areSiblings(black.at(k),black.at(k-1)))) {
+		// 	continue;
+		// }
 
-		vector<int> baseMoves = black.at(k);
+		vector<int> baseMoves = *k;
 
 		int escapeOptions = 7;
 		for (int i = 0; i < 7; i++) {
@@ -186,24 +182,19 @@ void connect4_AI::shortenBlacklist() {
 			baseMoves.pop_back();
 			baseMoves.pop_back();
 
-			if (black.back() != baseMoves)
+			if (black.find(baseMoves) == black.end()) {
 				this->blacklist(baseMoves);
+			}
 		}
-
-
-
 	}
-
-	black = removeDups(black);
-
 }
 
 vector<int> connect4_AI::badSingleMoves() {
 	vector<int> badMoves;
 
-	for (int k = 0; k < black.size(); k++) {
-		if (black.at(k).size() == 1)
-			badMoves.push_back(black.at(k).at(0));
+	for (auto itr = black.begin(); itr != black.end(); itr++) {
+		if (itr->size() == 1)
+			badMoves.push_back(itr->at(0));
 	}
 
 	return badMoves;
@@ -277,8 +268,6 @@ void connect4_AI::shortenGoldlist() {
 			modified.pop_back();
 			this->goldlist(modified);
 		}
-
-
 	}
 }
 
@@ -339,8 +328,3 @@ bool vectorContains(const vector<int> &Array, const int &value) {
 	}
 	return false; // if program gets to this point, no match has been foundd
 }
-
-
-
-
-
